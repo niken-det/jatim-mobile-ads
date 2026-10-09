@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>detikJatim mobile · ad mapping dari sheet</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;0,600;0,700;1,600&amp;family=IBM+Plex+Mono:wght@600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2B3F94}a:hover{color:#1C2A66}
+[data-held="1"]{position:relative;filter:grayscale(1);opacity:.45}
+[data-held="1"]::after{content:"Ditahan · maks 2 iklan di layar";position:absolute;left:0;right:0;top:0;bottom:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:6px;background:rgba(255,255,255,.75);color:#111111;font:700 11px Montserrat,sans-serif}
+</style>
+</helmet>
+<div style="width: 390px; height: 900px; display: flex; flex-direction: column; overflow: hidden; background: #FFFFFF; font-family: 'Montserrat', sans-serif; color: #111111">
+
+<div style="height: 56px; flex-shrink: 0; box-sizing: border-box; padding: 0 10px; display: flex; align-items: center; gap: 8px; background: #111111; color: #FFFFFF">
+<div style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px">
+<div style="font-size: 12px; font-weight: 700">Ad mapping · 89 baris · 18 slot · maks 2 di layar</div>
+<div style="display: flex; flex-wrap: wrap; column-gap: 8px; row-gap: 2px; font-size: 9px; font-weight: 600; color: #D4D4CF">
+<span style="display: flex; align-items: center; gap: 3px"><span style="width: 8px; height: 8px; background: #2F5DA8"></span>Display tetap</span>
+<span style="display: flex; align-items: center; gap: 3px"><span style="width: 8px; height: 8px; background: #B42318"></span>In-feed</span>
+<span style="display: flex; align-items: center; gap: 3px"><span style="width: 8px; height: 8px; background: #6D28D9"></span>Native</span>
+<span style="display: flex; align-items: center; gap: 3px"><span style="width: 8px; height: 8px; background: #D9B977"></span>Channel box</span>
+</div>
+</div>
+<button onClick="{{toggle}}" style="height: 44px; padding: 0 10px; border-radius: 8px; border: 1px solid #FFFFFF; background: {{tgBg}}; color: {{tgFg}}; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; cursor: pointer">Iklan saja</button>
+<button onClick="{{toggleUx}}" style="height: 44px; padding: 0 10px; border-radius: 8px; border: 1px solid #FFFFFF; background: {{uxBg}}; color: {{uxFg}}; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; cursor: pointer">Argumen</button>
+</div>
+
+<div style="flex-shrink: 0; background: #F4F1EA; border-bottom: 1px solid #D4D4CF">
+<div style="height: 44px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; padding: 0 10px; align-items: center">
+<div style="display: flex; flex-direction: column; gap: 1px"><span style="font-size: 9px; font-weight: 600; color: #5E5A52">Kedalaman scroll</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #111111">{{depth}}% · layar {{screen}}</span></div>
+<div style="display: flex; flex-direction: column; gap: 1px"><span style="font-size: 9px; font-weight: 600; color: #5E5A52">Iklan sudah terlihat</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #111111">{{seenCount}} / {{total}}</span></div>
+<div style="display: flex; flex-direction: column; gap: 1px"><span style="font-size: 9px; font-weight: 600; color: #5E5A52">Iklan di layar</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #111111">{{onScreen}} (maks {{maxOn}}) · tahan {{held}}</span></div>
+</div>
+<div style="height: 3px; background: #E5E3DE"><div style="height: 3px; width: {{depthW}}; background: #E06A2C"></div></div>
+</div>
+
+<div data-scroller="1" onScroll="{{onScroll}}" style="flex-grow: 1; min-height: 0; overflow-y: auto">
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="56">
+<div style="position: relative">
+<span style="position: absolute; right: 3px; top: 3px; z-index: 3; height: 15px; padding: 0 4px; border-radius: 3px; background: #111111; color: #FFFFFF; font-family: 'IBM Plex Mono', monospace; font-size: 9px; display: flex; align-items: center">{{r.no}}</span>
+
+<sc-if value="{{r.isAd}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 14px 0">
+<span style="font-size: 8px; font-weight: 600; letter-spacing: .08em; color: #8A867E">ADVERTISEMENT</span>
+<div data-ad="{{r.no}}" style="width: {{r.wpx}}; height: {{r.hpx}}; box-sizing: border-box; border: 2px dashed {{r.bd}}; background: {{r.bg}}; color: {{r.fg}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; padding: 8px">
+<div style="font-size: 13px; font-weight: 700">{{r.label}}</div>
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px">{{r.size}}</div>
+<div style="font-size: 10px; font-weight: 500">{{r.note}}</div>
+<sc-if value="{{r.hasTarget}}" hint-placeholder-val="{{true}}">
+<div style="margin-top: 2px; padding: 3px 8px; border-radius: 4px; background: #FFFFFF; font-size: 10px; font-weight: 700; line-height: 1.35">Target: {{r.target}}</div>
+</sc-if>
+</div>
+<sc-if value="{{showUx}}" hint-placeholder-val="{{false}}">
+<div style="width: 320px; box-sizing: border-box; margin-top: 8px; padding: 9px 12px; border-radius: 8px; background: #F4F1EA; color: #3A3A36; font-size: 11px; font-weight: 500; line-height: 1.5">
+<div style="font-size: 10px; font-weight: 700; color: #111111; margin-bottom: 3px">Kenapa nyaman buat pembaca</div>
+{{r.ux}}
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{r.isApps}}" hint-placeholder-val="{{false}}">
+<div style="height: 52px; display: flex; align-items: center; gap: 10px; padding: 0 14px; background: #F1EFEA; opacity: {{r.o}}">
+<div style="width: 32px; height: 32px; border-radius: 8px; background: #2B3F94"></div>
+<div style="flex-grow: 1; font-size: 11px; font-weight: 600">Apps Promotion · buka di aplikasi detikcom</div>
+<span style="height: 26px; padding: 0 10px; border-radius: 13px; background: #2B3F94; color: #FFFFFF; font-size: 10px; font-weight: 700; display: flex; align-items: center">Buka</span>
+</div>
+</sc-if>
+
+<sc-if value="{{r.isHeader}}" hint-placeholder-val="{{false}}">
+<div style="height: 57px; display: flex; align-items: center; gap: 12px; padding: 0 30px 0 16px; opacity: {{r.o}}">
+<svg width="22" height="18" viewBox="0 0 22 18" fill="none" stroke="#2B3F94" stroke-width="2.4" stroke-linecap="round"><path d="M2 3h18M2 9h14M2 15h18"></path></svg>
+<div style="font-size: 27px; font-weight: 700; letter-spacing: -0.5px; flex-grow: 1"><span style="color: #2B3F94">detik</span><span style="color: #E39B2E; font-weight: 600">jatim</span></div>
+<svg width="24" height="24" viewBox="0 0 26 26" fill="none" stroke="#111111" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="8"></circle><path d="M17 17l7 7"></path></svg>
+<div style="width: 26px; height: 20px; border: 2px solid #2B3F94; border-radius: 3px; font-size: 8px; font-weight: 700; color: #2B3F94; display: flex; align-items: center; justify-content: center">LIVE</div>
+</div>
+</sc-if>
+
+<sc-if value="{{r.isNav}}" hint-placeholder-val="{{false}}">
+<div style="height: 40px; display: flex; align-items: center; gap: 24px; padding: 0 16px; font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; opacity: {{r.o}}">
+<span style="color: #E06A2C">Home</span><span>Berita</span><span>Jogo Jatim</span><span>Sepakbola</span><span>Hukum &amp; Kriminal</span>
+</div>
+</sc-if>
+
+<sc-if value="{{r.isNav2}}" hint-placeholder-val="{{false}}">
+<div style="height: 40px; display: flex; align-items: center; gap: 8px; padding: 0 30px 0 16px; border-top: 1px solid #EDEBE6; border-bottom: 1px solid #EDEBE6; opacity: {{r.o}}">
+<span style="font-size: 11px; font-weight: 600; color: #5E5A52">Second Navbar</span>
+<span style="height: 26px; padding: 0 10px; border-radius: 13px; border: 1px solid #D4D4CF; font-size: 11px; font-weight: 600; display: flex; align-items: center">Slot 1</span>
+<span style="height: 26px; padding: 0 10px; border-radius: 13px; border: 1px solid #D4D4CF; font-size: 11px; font-weight: 600; display: flex; align-items: center">Slot 2</span>
+</div>
+</sc-if>
+
+<sc-if value="{{r.isHL}}" hint-placeholder-val="{{false}}">
+<div style="margin: 4px 12px 0 12px; border-radius: 8px; overflow: hidden; background: #EFD39B; opacity: {{r.o}}">
+<div style="height: 220px; background: linear-gradient(180deg, #B9B4AA 70%, #EFD39B 100%); display: flex; align-items: center; justify-content: center; color: #6E6A62; font-size: 12px; font-weight: 600">Headline</div>
+<div style="padding: 6px 16px 16px 16px; display: flex; flex-direction: column; gap: 8px">
+<div style="height: 12px; width: 92%; background: #D9B977; border-radius: 6px"></div>
+<div style="height: 12px; width: 70%; background: #D9B977; border-radius: 6px"></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{r.isTags}}" hint-placeholder-val="{{false}}">
+<div style="padding: 10px 18px 4px 18px; display: flex; flex-direction: column; gap: 10px; opacity: {{r.o}}">
+<div style="font-size: 17px; font-weight: 700; color: #E06A2C">Tag Populer</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; row-gap: 12px">
+<div style="display: flex; gap: 8px; align-items: center; min-width: 0"><span style="color: #E06A2C; font-weight: 600">#</span><div style="height: 10px; width: 85%; background: #D4D4CF; border-radius: 5px"></div></div>
+<div style="display: flex; gap: 8px; align-items: center; min-width: 0"><span style="color: #E06A2C; font-weight: 600">#</span><div style="height: 10px; width: 70%; background: #D4D4CF; border-radius: 5px"></div></div>
+<div style="display: flex; gap: 8px; align-items: center; min-width: 0"><span style="color: #E06A2C; font-weight: 600">#</span><div style="height: 10px; width: 60%; background: #D4D4CF; border-radius: 5px"></div></div>
+<div style="display: flex; gap: 8px; align-items: center; min-width: 0"><span style="color: #E06A2C; font-weight: 600">#</span><div style="height: 10px; width: 90%; background: #D4D4CF; border-radius: 5px"></div></div>
+<div style="display: flex; gap: 8px; align-items: center; min-width: 0"><span style="color: #E06A2C; font-weight: 600">#</span><div style="height: 10px; width: 75%; background: #D4D4CF; border-radius: 5px"></div></div>
+<div style="display: flex; gap: 8px; align-items: center; min-width: 0"><span style="color: #E06A2C; font-weight: 600">#</span><div style="height: 10px; width: 65%; background: #D4D4CF; border-radius: 5px"></div></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{r.isNHL}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; gap: 12px; padding: 8px 30px 8px 14px; opacity: {{r.o}}">
+<div style="width: 104px; height: 68px; flex-shrink: 0; background: #DCDCD7; border-radius: 6px"></div>
+<div style="flex-grow: 1; display: flex; flex-direction: column; gap: 6px; padding-top: 2px">
+<div style="font-size: 10px; font-weight: 700; color: #5E5A52">{{r.label}}</div>
+<div style="height: 9px; width: 95%; background: #D4D4CF; border-radius: 5px"></div>
+<div style="height: 9px; width: 65%; background: #D4D4CF; border-radius: 5px"></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{r.isCB}}" hint-placeholder-val="{{false}}">
+<div style="margin: 10px 12px; border: 2px solid #D9B977; border-radius: 12px; background: #F7F6F3; padding: 14px; display: flex; flex-direction: column; gap: 10px; opacity: {{r.o}}">
+<div style="font-size: 16px; font-weight: 700">{{r.label}}</div>
+<div style="font-size: 10px; font-weight: 600; color: #5E5A52">Channel box</div>
+<div style="height: {{r.hpx}}; background: #E8E5DE; border-radius: 6px"></div>
+</div>
+</sc-if>
+
+<sc-if value="{{r.isRekom}}" hint-placeholder-val="{{false}}">
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 6px 12px">
+<sc-for list="{{r.cards}}" as="c" hint-placeholder-count="2">
+<sc-if value="{{c.news}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 6px; opacity: {{c.o}}"><div style="height: 96px; background: #DCDCD7; border-radius: 6px"></div><div style="font-size: 10px; font-weight: 700; color: #5E5A52">{{c.label}}</div><div style="height: 9px; width: 90%; background: #D4D4CF; border-radius: 5px"></div></div>
+</sc-if>
+<sc-if value="{{c.ad}}" hint-placeholder-val="{{false}}">
+<div data-ad="27" style="display: flex; flex-direction: column; gap: 6px; padding: 4px; box-sizing: border-box; border: 2px dashed #6D28D9; background: #EFE7FD; color: #4C1D95"><div style="height: 84px; background: #DCCBFA; border-radius: 6px"></div><span style="align-self: flex-start; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: #6D28D9; color: #FFFFFF">Sponsor</span><div style="font-size: 10px; font-weight: 700">{{c.label}}</div></div>
+</sc-if>
+</sc-for>
+</div>
+<sc-if value="{{r.uxOn}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; justify-content: center; padding: 4px 0 10px 0">
+<div style="width: 320px; box-sizing: border-box; padding: 9px 12px; border-radius: 8px; background: #F4F1EA; color: #3A3A36; font-size: 11px; font-weight: 500; line-height: 1.5">
+<div style="font-size: 10px; font-weight: 700; color: #111111; margin-bottom: 3px">Kenapa nyaman buat pembaca · Native #27</div>
+{{r.ux}}
+</div>
+</div>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{r.isIndeks}}" hint-placeholder-val="{{false}}">
+<div style="padding: 16px 14px; opacity: {{r.o}}"><div style="height: 44px; border: 1px solid #111111; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700">Indeks Berita</div></div>
+</sc-if>
+
+<sc-if value="{{r.isNavFooter}}" hint-placeholder-val="{{false}}">
+<div style="height: 48px; display: flex; align-items: center; justify-content: center; gap: 18px; font-size: 11px; font-weight: 600; color: #3A3A36; border-top: 1px solid #EDEBE6; opacity: {{r.o}}"><span>Berita</span><span>Sepakbola</span><span>Wisata</span><span>Kuliner</span><span>Video</span></div>
+</sc-if>
+
+<sc-if value="{{r.isFooter}}" hint-placeholder-val="{{false}}">
+<div style="height: 160px; background: #1A1A1A; display: flex; align-items: center; justify-content: center; color: #A8A8A2; font-size: 12px; opacity: {{r.o}}">Footer</div>
+</sc-if>
+</div>
+</sc-for>
+
+<div style="height: 20px; background: #1A1A1A"></div>
+<sc-if value="{{showUx}}" hint-placeholder-val="{{false}}">
+<div style="background: #1A1A1A; padding: 0 0 20px 0; display: flex; justify-content: center">
+<div style="width: 320px; box-sizing: border-box; padding: 9px 12px; border-radius: 8px; background: #F4F1EA; color: #3A3A36; font-size: 11px; font-weight: 500; line-height: 1.5">
+<div style="font-size: 10px; font-weight: 700; color: #111111; margin-bottom: 3px">Kenapa nyaman buat pembaca · Sticky #89</div>
+Kecil, bisa ditutup dengan satu ketukan, dan tidak menutupi tombol atau teks. Pembaca yang pegang kendali, bukan iklannya.
+</div>
+</div>
+</sc-if>
+
+<div style="position: sticky; bottom: 0; z-index: 10; height: 62px; background: #FFFFFF; border-top: 1px solid #D4D4CF; display: flex; align-items: center; justify-content: center; position: sticky">
+<span style="position: absolute; right: 3px; top: 3px; height: 15px; padding: 0 4px; border-radius: 3px; background: #111111; color: #FFFFFF; font-family: 'IBM Plex Mono', monospace; font-size: 9px; display: flex; align-items: center">89</span>
+<div data-ad="89" data-prio="90" style="width: 320px; height: 50px; box-sizing: border-box; border: 2px dashed #2F5DA8; background: #E3ECFA; color: #1E3A6E; display: flex; flex-direction: column; align-items: center; justify-content: center">
+<div style="font-size: 11px; font-weight: 700">Sticky Static Banner</div>
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 9px">320x50 · bisa ditutup</div>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":900}}'>
+class Component extends DCLogic {
+  componentDidMount() {
+    setTimeout(() => this.measure(document.querySelector('[data-scroller]')), 500);
+  }
+  measure(el) {
+    if (!el) return;
+    const cr = el.getBoundingClientRect();
+    const s = this.state || {};
+    const seen = Object.assign({}, s.seen || {});
+    const ids = Object.assign({}, s.ids || {});
+    const groups = {};
+    let order = 0;
+    document.querySelectorAll('[data-ad]').forEach((n) => {
+      const id = n.getAttribute('data-ad');
+      if (!id) return;
+      ids[id] = true;
+      const r = n.getBoundingClientRect();
+      const vis = Math.max(0, Math.min(r.bottom, cr.bottom) - Math.max(r.top, cr.top));
+      const g = groups[id] || { nodes: [], vis: false, prio: parseFloat(n.getAttribute('data-prio') || '50'), order: order++ };
+      g.nodes.push(n);
+      if (r.height > 0 && vis / r.height >= 0.5) g.vis = true;
+      groups[id] = g;
+    });
+    const visible = Object.keys(groups).filter((id) => groups[id].vis)
+      .sort((a, b) => (groups[a].prio - groups[b].prio) || (groups[a].order - groups[b].order));
+    const allowed = (groups['2'] && groups['2'].vis && groups['2'].prio === 0) ? ['2'] : visible.slice(0, 2);
+    Object.keys(groups).forEach((id) => {
+      const held = groups[id].vis && allowed.indexOf(id) < 0;
+      groups[id].nodes.forEach((n) => { if (held) n.setAttribute('data-held', '1'); else n.removeAttribute('data-held'); });
+    });
+    allowed.forEach((id) => { seen[id] = true; });
+    const on = allowed.length;
+    const depth = Math.min(100, Math.round((el.scrollTop + el.clientHeight) / el.scrollHeight * 100));
+    this.setState({ seen: seen, ids: ids, onScreen: on, held: visible.length - on, maxOn: Math.max(on, s.maxOn || 0), depth: depth,
+      screen: Math.floor(el.scrollTop / Math.max(1, el.clientHeight)) + 1, total: Object.keys(ids).length });
+  }
+  metrics() {
+    const s = this.state || {};
+    const d = s.depth || 0;
+    return { depth: d, depthW: d + '%', screen: s.screen || 1, seenCount: Object.keys(s.seen || {}).length,
+      total: s.total || 0, onScreen: s.onScreen || 0, maxOn: s.maxOn || 0, held: s.held || 0 };
+  }
+  renderVals() {
+    const st = this.state || {};
+    const o = st.adsOnly ? 0.2 : 1;
+    const C = {
+      fixed: { bd: '#2F5DA8', bg: '#E3ECFA', fg: '#1E3A6E' },
+      feed: { bd: '#B42318', bg: '#FDE8E6', fg: '#7A1A12' }
+    };
+    const base = { hasUx: false, isAd: false, isApps: false, isHeader: false, isNav: false, isNav2: false, isHL: false, isTags: false, isNHL: false, isCB: false, isRekom: false, isIndeks: false, isNavFooter: false, isFooter: false, o: o };
+    const ad = (no, label, w, h, size, note, kind, target, ux) => ({ ...base, ...C[kind], isAd: true, no: no, label: label, wpx: w + 'px', hpx: h + 'px', size: size, note: note, target: target, hasTarget: false, ux: ux });
+    const k = (no, flag, extra) => ({ ...base, no: no, [flag]: true, ...(extra || {}) });
+    const nhl = (no, n) => k(no, 'isNHL', { label: 'NHL ' + n });
+    const cb = (no, name, h) => k(no, 'isCB', { label: name, hpx: (h || 160) + 'px' });
+    const feed3 = (no, note, target, ux) => ad(no, 'In feeds 2', 300, 250, '300x250', note, 'feed', target, ux);
+    const feed4 = (no) => ad(no, 'In feeds x', 300, 250, '300x250', 'Berulang · break 5 aliran · monetize aliran berita', 'feed', '', 'Pembaca yang sampai sejauh ini sedang lahap membaca. Jeda dibuat lebih jarang, setiap 5 berita, supaya tidak terasa dikejar iklan.');
+    const rk = (no, a, b, bAd, ux) => k(no, 'isRekom', { hasUx: !!ux, uxOn: !!ux && !!st.showUx, ux: ux || '', cards: [
+      { news: true, ad: false, label: a, o: o },
+      { news: !bAd, ad: !!bAd, label: b, o: o }
+    ] });
+    const rows = [
+      ad(1, 'Premium Billboard / Mega Billboard', 300, 480, '300x480', 'Impresi pertama, 100% terlihat. Dijual per hari / takeover.', 'fixed', 'brand besar, kampanye peluncuran', 'Muncul sekali di awal, sebelum pembaca mulai membaca, jadi tidak memotong cerita apa pun. Setelah di-scroll, ia pergi dan tidak mengejar.'),
+      k(2, 'isApps'),
+      k(3, 'isHeader'),
+      k(4, 'isNav'),
+      k(5, 'isNav2'),
+      ad(6, 'Billboard', 320, 140, '320x100', 'Roadblock dengan #1, atau fallback bila #1 tidak terjual', 'fixed', 'brand yang sama dengan #1', 'Ini titik paling berat untuk pembaca. Supaya tetap manusiawi, tayangkan hanya saat #1 kosong, jadi orang tidak perlu melewati dua iklan besar untuk sampai ke berita utama.'),
+      k(7, 'isHL'),
+      k(9, 'isTags'),
+      nhl(10, 1), nhl(11, 2), nhl(12, 3),
+      ad(13, 'In feeds 1', 320, 480, '300x250 · 320x480', 'Monetize sinyal pertama user tertarik berita (newsfeed)', 'feed', 'brand lokal Jatim, Pemda, BUMD · brand safety ketat (konten UGC di bawah)', 'Pembaca sudah menghabiskan 3 berita, artinya mereka betah. Iklan besar datang saat perhatian sedang longgar, bukan saat mereka sedang mencari sesuatu.'),
+      cb(14, 'CB Info Sekitarmu - Jatim', 220),
+      nhl(15, 4), nhl(16, 5), nhl(17, 6),
+      feed3(18, 'Pengantar CB Flash', 'programmatic brand-safe, telco, FMCG', 'Polanya selalu sama: tiga berita, lalu satu jeda. Pembaca bisa menebak kapan iklan datang, jadi tidak merasa disergap.'),
+      cb(19, 'CB Flash'),
+      nhl(20, 7), nhl(21, 8), nhl(22, 9),
+      feed3(23, 'Pengantar CB Rekomendasi, user mode cari bacaan', '', 'Muncul tepat sebelum pembaca memilih bacaan berikutnya, saat mereka memang sedang terbuka pada hal baru.'),
+      cb(24, 'CB Rekomendasi', 0),
+      rk(25, 'Artikel Rekomendasi 1', 'Artikel Rekomendasi 2'),
+      rk(26, 'Artikel Rekomendasi 3', 'Artikel Rekomendasi 4'),
+      rk(27, 'Artikel Rekomendasi 5', 'Native Rekomendasi 6 (adsmart)', true, 'Bentuknya sama dengan kartu artikel, tapi label Sponsor-nya jelas. Pembaca tidak tertipu: mereka tetap tahu mana berita dan mana iklan.'),
+      nhl(28, 10), nhl(29, 11), nhl(30, 12),
+      feed3(31, 'Pengantar CB BB', '', 'Tiga berita dulu, baru iklan. Kalau CB BB berisi ajakan donasi, iklannya harus tenang; promo konsumtif yang heboh terasa janggal di sebelah ajakan berbagi.'),
+      cb(32, 'CB BB'),
+      nhl(33, 13), nhl(34, 14), nhl(35, 15),
+      feed3(36, 'Pengantar CB Video, kandidat outstream', '', 'Pembaca sudah siap menonton. Video wajib tanpa suara sampai diketuk, supaya tidak mengagetkan orang yang membaca di angkot atau kantor.'),
+      cb(37, 'CB Video', 200),
+      nhl(38, 16), nhl(39, 17), nhl(40, 18),
+      feed3(41, 'Pengantar CB Koleksi Pilihan', '', 'Pembaca sedang mode menjelajah pilihan redaksi. Iklan gaya hidup atau belanja terasa nyambung, seperti satu lagi rekomendasi.'),
+      cb(42, 'CB Koleksi Pilihan'),
+      nhl(43, 19), nhl(44, 20), nhl(45, 21),
+      feed3(46, 'Pengantar CB Komentar, area engagement tinggi', '', 'Orang yang membuka komentar sedang santai dan lama di halaman. Iklan di sini dibaca dengan tenang, bukan dilewati buru-buru.'),
+      cb(47, 'CB Komentar Terbanyak'),
+      nhl(48, 22), nhl(49, 23), nhl(50, 24),
+      feed3(51, 'Pengantar CB Lapor Cak, box layanan publik', '', 'Lapor Cak berisi keluhan warga. Iklan yang tenang dan bermanfaat terasa wajar di sini; promo yang heboh justru terasa tidak peka.'),
+      cb(52, 'CB Lapor Cak'),
+      nhl(53, 25), nhl(54, 26), nhl(55, 27),
+      feed3(56, 'Pengantar CB Woro-Woro, pengumuman & event', '', 'Woro-woro berisi kabar acara. Promo event lokal di sini terasa seperti informasi tambahan untuk warga, bukan gangguan.'),
+      cb(57, 'CB Woro-Woro'),
+      nhl(58, 28), nhl(59, 29), nhl(60, 30),
+      feed3(61, 'Pengantar CB Loker Jatim', '', 'Pembaca yang mau cari kerja disambut iklan yang relevan, seperti kursus atau portal kerja, jadi terasa membantu, bukan menjual.'),
+      cb(62, 'CB Loker Jatim'),
+      nhl(63, 31), nhl(64, 32), nhl(65, 33), nhl(66, 34), nhl(67, 35),
+      feed4(68),
+      nhl(69, 36), nhl(70, 37), nhl(71, 38), nhl(72, 39), nhl(73, 40),
+      feed4(74),
+      nhl(75, 41), nhl(76, 42), nhl(77, 43), nhl(78, 44), nhl(79, 45),
+      feed4(80),
+      nhl(81, 46), nhl(82, 47), nhl(83, 48), nhl(84, 49), nhl(85, 50),
+      k(86, 'isIndeks'),
+      k(87, 'isNavFooter'),
+      ad('FL', 'Footer Leaderboard', 320, 80, '320x50', 'Area navbar footer, sebelum Footer', 'fixed', '', 'Muncul setelah pembaca selesai menjelajah, di area navigasi bawah. Tidak memotong bacaan.'),
+      k(88, 'isFooter')
+    ];
+    let cbN = 2;
+    rows.forEach((r) => { if (r.isAd && r.label === 'In feeds 2') { r.label = 'In feeds ' + (cbN++); r.note = 'Break 3 newsfeed sebelum CB · ' + r.note; } });
+    return {
+      ...this.metrics(),
+      onScroll: (e) => this.measure(e.currentTarget),
+      rows: rows,
+      tgBg: st.adsOnly ? '#FFFFFF' : '#111111',
+      tgFg: st.adsOnly ? '#111111' : '#FFFFFF',
+      toggle: () => this.setState({ adsOnly: !st.adsOnly }),
+      showUx: !!st.showUx,
+      uxBg: st.showUx ? '#FFFFFF' : '#111111',
+      uxFg: st.showUx ? '#111111' : '#FFFFFF',
+      toggleUx: () => this.setState({ showUx: !st.showUx })
+    };
+  }
+}
+</script>
+</body>
+</html>
