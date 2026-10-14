@@ -23,7 +23,7 @@ a{color:#2B3F94}a:hover{color:#1C2A66}
 
 <div style="height: 56px; flex-shrink: 0; box-sizing: border-box; padding: 0 10px; display: flex; align-items: center; gap: 8px; background: #111111; color: #FFFFFF">
 <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px">
-<div style="font-size: 12px; font-weight: 700">Ad mapping · 89 baris · 18 slot · maks 2 di layar</div>
+<div style="font-size: 12px; font-weight: 700">Ad mapping · 89 baris · 19 slot · maks 2 di layar</div>
 <div style="display: flex; flex-wrap: wrap; column-gap: 8px; row-gap: 2px; font-size: 9px; font-weight: 600; color: #D4D4CF">
 <span style="display: flex; align-items: center; gap: 3px"><span style="width: 8px; height: 8px; background: #2F5DA8"></span>Display tetap</span>
 <span style="display: flex; align-items: center; gap: 3px"><span style="width: 8px; height: 8px; background: #B42318"></span>In-feed</span>
@@ -131,6 +131,16 @@ a{color:#2B3F94}a:hover{color:#1C2A66}
 <div style="font-size: 10px; font-weight: 700; color: #5E5A52">{{r.label}}</div>
 <div style="height: 9px; width: 95%; background: #D4D4CF; border-radius: 5px"></div>
 <div style="height: 9px; width: 65%; background: #D4D4CF; border-radius: 5px"></div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{r.isNatNHL}}" hint-placeholder-val="{{false}}">
+<div data-ad="NN1" style="display: flex; gap: 12px; margin: 4px 8px; padding: 6px 22px 6px 6px; box-sizing: border-box; border: 2px dashed #6D28D9; background: #EFE7FD; color: #4C1D95">
+<div style="width: 104px; height: 68px; flex-shrink: 0; background: #DCCBFA; border-radius: 6px"></div>
+<div style="flex-grow: 1; display: flex; flex-direction: column; gap: 5px; padding-top: 2px">
+<span style="align-self: flex-start; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: #6D28D9; color: #FFFFFF">Sponsor</span>
+<div style="font-size: 11px; font-weight: 700">{{r.label}}</div>
+<div style="font-size: 10px; font-weight: 500">Bentuk sama dengan NHL, di antara NHL 1 dan NHL 2</div>
 </div>
 </div>
 </sc-if>
@@ -248,7 +258,7 @@ class Component extends DCLogic {
       fixed: { bd: '#2F5DA8', bg: '#E3ECFA', fg: '#1E3A6E' },
       feed: { bd: '#B42318', bg: '#FDE8E6', fg: '#7A1A12' }
     };
-    const base = { hasUx: false, isAd: false, isApps: false, isHeader: false, isNav: false, isNav2: false, isHL: false, isTags: false, isNHL: false, isCB: false, isRekom: false, isIndeks: false, isNavFooter: false, isFooter: false, o: o };
+    const base = { hasUx: false, isNatNHL: false, isAd: false, isApps: false, isHeader: false, isNav: false, isNav2: false, isHL: false, isTags: false, isNHL: false, isCB: false, isRekom: false, isIndeks: false, isNavFooter: false, isFooter: false, o: o };
     const ad = (no, label, w, h, size, note, kind, target, ux) => ({ ...base, ...C[kind], isAd: true, no: no, label: label, wpx: w + 'px', hpx: h + 'px', size: size, note: note, target: target, hasTarget: false, ux: ux });
     const k = (no, flag, extra) => ({ ...base, no: no, [flag]: true, ...(extra || {}) });
     const nhl = (no, n) => k(no, 'isNHL', { label: 'NHL ' + n });
@@ -268,7 +278,7 @@ class Component extends DCLogic {
       ad(6, 'Billboard', 320, 140, '320x100', 'Roadblock dengan #1, atau fallback bila #1 tidak terjual', 'fixed', 'brand yang sama dengan #1', 'Ini titik paling berat untuk pembaca. Supaya tetap manusiawi, tayangkan hanya saat #1 kosong, jadi orang tidak perlu melewati dua iklan besar untuk sampai ke berita utama.'),
       k(7, 'isHL'),
       k(9, 'isTags'),
-      nhl(10, 1), nhl(11, 2), nhl(12, 3),
+      nhl(10, 1), k('10a', 'isNatNHL', { label: 'Native Newsfeed 1' }), nhl(11, 2), nhl(12, 3),
       ad(13, 'In feeds 1', 320, 480, '300x250 · 320x480', 'Monetize sinyal pertama user tertarik berita (newsfeed)', 'feed', 'brand lokal Jatim, Pemda, BUMD · brand safety ketat (konten UGC di bawah)', 'Pembaca sudah menghabiskan 3 berita, artinya mereka betah. Iklan besar datang saat perhatian sedang longgar, bukan saat mereka sedang mencari sesuatu.'),
       cb(14, 'CB Info Sekitarmu - Jatim', 220),
       nhl(15, 4), nhl(16, 5), nhl(17, 6),
@@ -309,8 +319,7 @@ class Component extends DCLogic {
       feed4(80),
       nhl(81, 46), nhl(82, 47), nhl(83, 48), nhl(84, 49), nhl(85, 50),
       k(86, 'isIndeks'),
-      k(87, 'isNavFooter'),
-      ad('FL', 'Footer Leaderboard', 320, 80, '320x50', 'Area navbar footer, sebelum Footer', 'fixed', '', 'Muncul setelah pembaca selesai menjelajah, di area navigasi bawah. Tidak memotong bacaan.'),
+      ad('FL', 'Footer Leaderboard', 320, 80, '320x50', 'Setelah Indeks Berita, sebelum Footer (menu navbar footer dihapus)', 'fixed', '', 'Muncul setelah pembaca selesai menjelajah, di area navigasi bawah. Tidak memotong bacaan.'),
       k(88, 'isFooter')
     ];
     let cbN = 2;
