@@ -47,7 +47,10 @@ a{color:#2B3F94}a:hover{color:#1C2A66}
 <div data-scroller="1" onScroll="{{onScroll}}" style="flex-grow: 1; min-height: 0; overflow-y: auto">
 <sc-for list="{{rows}}" as="r" hint-placeholder-count="56">
 <div style="position: relative">
-<span style="position: absolute; right: 3px; top: 3px; z-index: 3; height: 15px; padding: 0 4px; border-radius: 3px; background: #111111; color: #FFFFFF; font-family: 'IBM Plex Mono', monospace; font-size: 9px; display: flex; align-items: center">{{r.no}}</span>
+<sc-if value="{{r.hasNo}}" hint-placeholder-val="{{true}}"><span style="position: absolute; right: 3px; top: 3px; z-index: 3; height: 15px; padding: 0 4px; border-radius: 3px; background: #111111; color: #FFFFFF; font-family: 'IBM Plex Mono', monospace; font-size: 9px; display: flex; align-items: center">{{r.no}}</span></sc-if>
+<sc-if value="{{r.isRekomHead}}" hint-placeholder-val="{{false}}">
+<div style="padding: 16px 14px 6px 14px; font-size: 16px; font-weight: 700; color: #E06A2C; opacity: {{r.o}}">Rekomendasi untuk Anda</div>
+</sc-if>
 
 <sc-if value="{{r.isAd}}" hint-placeholder-val="{{false}}">
 <div style="display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 14px 0">
@@ -258,7 +261,7 @@ class Component extends DCLogic {
       fixed: { bd: '#2F5DA8', bg: '#E3ECFA', fg: '#1E3A6E' },
       feed: { bd: '#B42318', bg: '#FDE8E6', fg: '#7A1A12' }
     };
-    const base = { hasUx: false, isNatNHL: false, isAd: false, isApps: false, isHeader: false, isNav: false, isNav2: false, isHL: false, isTags: false, isNHL: false, isCB: false, isRekom: false, isIndeks: false, isNavFooter: false, isFooter: false, o: o };
+    const base = { hasUx: false, isRekomHead: false, isNatNHL: false, isAd: false, isApps: false, isHeader: false, isNav: false, isNav2: false, isHL: false, isTags: false, isNHL: false, isCB: false, isRekom: false, isIndeks: false, isNavFooter: false, isFooter: false, o: o };
     const ad = (no, label, w, h, size, note, kind, target, ux) => ({ ...base, ...C[kind], isAd: true, no: no, label: label, wpx: w + 'px', hpx: h + 'px', size: size, note: note, target: target, hasTarget: false, ux: ux });
     const k = (no, flag, extra) => ({ ...base, no: no, [flag]: true, ...(extra || {}) });
     const nhl = (no, n) => k(no, 'isNHL', { label: 'NHL ' + n });
@@ -286,7 +289,7 @@ class Component extends DCLogic {
       cb(19, 'CB Flash'),
       nhl(20, 7), nhl(21, 8), nhl(22, 9),
       feed3(23, 'Pengantar CB Rekomendasi, user mode cari bacaan', '', 'Muncul tepat sebelum pembaca memilih bacaan berikutnya, saat mereka memang sedang terbuka pada hal baru.'),
-      cb(24, 'CB Rekomendasi', 0),
+      k('', 'isRekomHead'),
       rk(25, 'Artikel Rekomendasi 1', 'Artikel Rekomendasi 2'),
       rk(26, 'Artikel Rekomendasi 3', 'Artikel Rekomendasi 4'),
       rk(27, 'Artikel Rekomendasi 5', 'Native Rekomendasi 6 (adsmart)', true, 'Bentuknya sama dengan kartu artikel, tapi label Sponsor-nya jelas. Pembaca tidak tertipu: mereka tetap tahu mana berita dan mana iklan.'),
@@ -322,6 +325,7 @@ class Component extends DCLogic {
       ad('FL', 'Footer Leaderboard', 320, 80, '320x50', 'Setelah Indeks Berita, sebelum Footer (menu navbar footer dihapus)', 'fixed', '', 'Muncul setelah pembaca selesai menjelajah, di area navigasi bawah. Tidak memotong bacaan.'),
       k(88, 'isFooter')
     ];
+    rows.forEach((r) => { r.hasNo = r.no !== '' && r.no !== undefined; });
     let cbN = 2;
     rows.forEach((r) => { if (r.isAd && r.label === 'In feeds 2') { r.label = 'In feeds ' + (cbN++); r.note = 'Break 3 newsfeed sebelum CB · ' + r.note; } });
     return {
